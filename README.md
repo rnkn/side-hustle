@@ -7,7 +7,7 @@ Hustle through a buffer's Imenu in a side window in GNU Emacs.
 Installation
 ------------
 
-Add somethign like this to your init file:
+Add something like this to your init file:
 
     (define-key (current-global-map) (kbd "M-s l") #'side-hustle-toggle)
 
