@@ -58,9 +58,16 @@
   :safe 'booleanp
   :group 'side-hustle)
 
-(defcustom side-hustle-persistent-window t
+(defcustom side-hustle-persistent-window nil
   "When non-nil, make the side-window persistent.
-Otherwise, quit the side-window when calling
+This requires either calling `quit-window' or
+`side-hustle-toggle' to quit the side-window."
+  :type 'boolean
+  :safe 'booleanp
+  :group 'side-hustle)
+
+(defcustom side-hustle-evaporate-window nil
+  "When non-nil, quit the side-window when calling
 `side-hustle-goto-item'."
   :type 'boolean
   :safe 'booleanp
@@ -188,8 +195,8 @@ Added to `window-configuration-change-hook'."
     (when (markerp marker)
       (pop-to-buffer (marker-buffer marker))
       (goto-char (marker-position marker))
-      (side-hustle-highlight-current)
-      (unless side-hustle-persistent-window
+      ;; (side-hustle-highlight-current)
+      (when side-hustle-evaporate-window
         (quit-window nil (get-buffer-window buf (selected-frame)))))))
 
 (defun side-hustle-show-item ()
