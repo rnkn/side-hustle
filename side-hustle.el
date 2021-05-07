@@ -250,7 +250,7 @@ Added to `window-configuration-change-hook'."
                        (list '(window-parameters
                                (no-delete-other-windows . t))))))
         (with-current-buffer buf (side-hustle-refresh))
-        (side-hustle-highlight-current)
+        ;; (side-hustle-highlight-current)
         (when side-hustle-select-window
           (select-window (get-buffer-window buf (selected-frame))))))))
 
