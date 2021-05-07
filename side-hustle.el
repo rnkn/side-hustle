@@ -99,8 +99,13 @@ This requires either calling `quit-window' or
   "Insert ITEM at indentation level LEVEL.
 And `imenu' marker as text property."
   (insert (make-string level side-hustle-indent-char))
-  (insert (car item))
-  (put-text-property (line-beginning-position) (line-end-position)
+  ;; (insert side-hustle-item-char "\s")
+  (insert-text-button (car item)
+                      'action #'side-hustle-goto-item
+                      'face 'default
+                      'help-echo "mouse-1, RET: Go to this item"
+                      'follow-link t)
+  (put-text-property (line-beginning-position)(line-end-position)
                      'side-hustle-imenu-marker (cdr item))
   (put-text-property (line-beginning-position) (line-end-position)
                      'side-hustle-level level)
@@ -187,7 +192,7 @@ Added to `window-configuration-change-hook'."
 
 ;;; Commands
 
-(defun side-hustle-goto-item ()
+(defun side-hustle-goto-item (&optional button)
   "Go to the `imenu' item at point."
   (interactive)
   (let ((buf (current-buffer))
@@ -261,7 +266,9 @@ Added to `window-configuration-change-hook'."
     (define-key map (kbd "g") #'side-hustle-refresh)
     (define-key map (kbd "RET") #'side-hustle-goto-item)
     (define-key map (kbd "SPC") #'side-hustle-show-item)
-    (define-key map (kbd "TAB") #'side-hustle-show-hide)
+    (define-key map (kbd "TAB") #'forward-button)
+    (define-key map (kbd "S-TAB") #'backward-button)
+    (define-key map (kbd "<backtab>") #'backward-button)
     map))
 
 (define-derived-mode side-hustle-mode
