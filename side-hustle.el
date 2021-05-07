@@ -138,6 +138,7 @@ recursively with `cdr'."
                 (imenu--make-index-alist t)
                 imenu--index-alist)))
       (erase-buffer)
+      (setq header-line-format (buffer-name side-hustle--source-buffer))
       (when imenu-items (side-hustle-insert-items imenu-items 0))
       (goto-char x))))
 
