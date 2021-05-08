@@ -3,6 +3,9 @@ Side Hustle
 
 Hustle through a buffer's Imenu in a side window in GNU Emacs.
 
+Side Hustle works on multiple buffers simultaneously, does not require a
+global minor mode, and does not rely on timers.
+
 
 Installation
 ------------
@@ -26,4 +29,5 @@ Known issues are tracked with `FIXME` comments in the source.
 Alternatives
 ------------
 
-[Imenu-List](https://github.com/bmag/imenu-list)
+Side Hustle takes inspiration primarily from
+[imenu-list](https://github.com/bmag/imenu-list).
