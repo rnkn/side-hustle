@@ -137,28 +137,42 @@ This requires either calling `quit-window' or
   (or (button-at (point))
       (forward-button 1 nil nil t)))
 
-(defun side-hustle-button-action (button)
-  "Call appropriate button action for BUTTON."
+(defun side-hustle-pop-to-marker (marker buffer save-window)
+  "Pop up buffer containing MARKER.
+Handle BUFFER according to SAVE-WINDOW or value of
+`side-hustle-evaporate-window'."
+  (pop-to-buffer (marker-buffer marker))
+  (goto-char (marker-position marker))
+  (cond (save-window
+         (recenter 0)
+         (select-window (get-buffer-window buffer (selected-frame))))
+        (side-hustle-evaporate-window
+         (quit-window nil (get-buffer-window buffer (selected-frame))))))
+
+(defun side-hustle-show-hide (start end)
+  "Toggle invisibility of items between START and END."
+  (with-silent-modifications
+    (if (eq (get-text-property (button-end (button-at (point))) 'invisible)
+            'hustle-invisible)
+        (put-text-property start end 'invisible nil)
+      (put-text-property start end 'invisible 'hustle-invisible))))
+
+(defun side-hustle-button-action (button &optional save-window)
+  "Call appropriate button action for BUTTON.
+Pass SAVE-WINDOW to `side-hustle-pop-to-marker'."
   (let ((level (button-get button 'hustle-level))
         (start (button-end button))
-        (end (button-end button)))
+        (end   (button-end button)))
     (save-excursion
       (while (and (forward-button 1 nil nil t)
                   (< level (button-get (button-at (point)) 'hustle-level)))
         (setq end (button-end (button-at (point))))))
     (if (= start end)
-        (let ((buf (current-buffer))
+        (let ((buffer (current-buffer))
               (marker (button-get button 'hustle-marker)))
-          (when (markerp marker)
-            (pop-to-buffer (marker-buffer marker))
-            (goto-char (marker-position marker))
-            (when side-hustle-evaporate-window
-              (quit-window nil (get-buffer-window buf (selected-frame))))))
-      (with-silent-modifications
-        (if (eq (get-text-property (button-end (button-at (point))) 'invisible)
-                'hustle-invisible)
-            (put-text-property start end 'invisible nil)
-          (put-text-property start end 'invisible 'hustle-invisible))))))
+            (when (markerp marker)
+              (side-hustle-pop-to-marker marker buffer save-window)))
+      (side-hustle-show-hide start end))))
 
 (defun side-hustle-insert (item level)
   "Insert ITEM at indentation level LEVEL.
@@ -256,16 +270,17 @@ Added to `window-configuration-change-hook'."
 
 ;;; Commands
 
+(defun side-hustle-goto-item ()
+  "Go to the `imenu' item at point in other window."
+  (interactive)
+  (when (side-hustle-button-ensure)
+    (side-hustle-button-action (button-at (point)))))
+
 (defun side-hustle-show-item ()
   "Display the `imenu' item at point in other window."
   (interactive)
   (when (side-hustle-button-ensure)
-    (let ((marker (button-get (button-at (point)) 'hustle-marker)))
-      (when (markerp marker)
-        (save-selected-window
-          (pop-to-buffer (marker-buffer marker))
-          (goto-char (marker-position marker))
-          (recenter 0))))))
+    (side-hustle-button-action (button-at (point)) t)))
 
 ;;;###autoload
 (defun side-hustle-toggle ()
@@ -298,6 +313,7 @@ Added to `window-configuration-change-hook'."
     (define-key map (kbd "n") #'next-line)
     (define-key map (kbd "q") #'quit-window)
     (define-key map (kbd "g") #'side-hustle-refresh)
+    (define-key map (kbd "RET") #'side-hustle-goto-item)
     (define-key map (kbd "SPC") #'side-hustle-show-item)
     (define-key map (kbd "TAB") #'forward-button)
     (define-key map (kbd "S-TAB") #'backward-button)
