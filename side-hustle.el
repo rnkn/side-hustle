@@ -83,7 +83,7 @@ This requires either calling `quit-window' or
 ;;; Faces
 
 (defface side-hustle
-  '((t (:inherit default)))
+  '((t (:underline nil :inherit button)))
   "Default face for side-window items."
   :group 'side-hustle)
 
@@ -275,8 +275,7 @@ Added to `window-configuration-change-hook'."
 (define-derived-mode side-hustle-mode
   special-mode "Side-Hustle"
   "Major mode to navigate `imenu' via a side window."
-  (add-to-invisibility-spec '(side-hustle-invisible . t))
-  (face-remap-add-relative 'default 'side-hustle))
+  (add-to-invisibility-spec '(hustle-invisible . t)))
 
 
 
