@@ -174,22 +174,22 @@ recursively with `cdr'."
       (when imenu-items (side-hustle-insert-items imenu-items 0))
       (goto-char x))))
 
-(defun side-hustle-find-existing (src-buf)
-  "Return existing `side-hustle' buffer for SRC-BUF or nil if none."
+(defun side-hustle-find-existing (sourcebuf)
+  "Return existing `side-hustle' buffer for SOURCEBUF or nil if none."
   (seq-find
    (lambda (buf)
      (with-current-buffer buf
-       (eq side-hustle--source-buffer src-buf)))
+       (eq side-hustle--source-buffer sourcebuf)))
    (buffer-list)))
 
-(defun side-hustle-get-buffer-create (src-buf)
-  "Get or create `side-hustle' buffer for SRC-BUF."
-  (or (side-hustle-find-existing src-buf)
+(defun side-hustle-get-buffer-create (sourcebuf)
+  "Get or create `side-hustle' buffer for SOURCEBUF."
+  (or (side-hustle-find-existing sourcebuf)
       (let ((new-buf (get-buffer-create
-                      (concat "Side-Hustle: " (buffer-name src-buf)))))
+                      (concat "Side-Hustle: " (buffer-name sourcebuf)))))
         (with-current-buffer new-buf
           (side-hustle-mode)
-          (setq side-hustle--source-buffer src-buf))
+          (setq side-hustle--source-buffer sourcebuf))
         new-buf)))
 
 (defun side-hustle-highlight-current ()
