@@ -106,14 +106,13 @@ This requires either calling `quit-window' or
 
 (defcustom side-hustle-item-char ?\*
   "Character to use to itemize `imenu' items."
-  :type 'character
-  :safe 'characterp
+  :type '(choice (const nil) character)
   :group 'side-hustle)
 
-(defcustom side-hustle-indent-char ?\t
-  "Character to use to indent levels of `imenu' items."
-  :type 'character
-  :safe 'characterp
+(defcustom side-hustle-indent-width 4
+  "Indent width in columns for sublevels of `imenu' items."
+  :type 'integer
+  :safe 'integerp
   :group 'side-hustle)
 
 
@@ -176,9 +175,10 @@ Pass SAVE-WINDOW to `side-hustle-pop-to-marker'."
 
 (defun side-hustle-insert (item level)
   "Insert ITEM at indentation level LEVEL.
-And `imenu' marker as text property."
-  (insert (make-string level side-hustle-indent-char))
-  (insert side-hustle-item-char "\s")
+And `imenu' marker as button property."
+  (insert (make-string level ?\t))
+  (when (characterp side-hustle-item-char)
+    (insert side-hustle-item-char "\s"))
   (insert-text-button (car item)
                       'hustle-marker (cdr item)
                       'hustle-level level
@@ -216,6 +216,7 @@ recursively with `cdr'."
                 imenu--index-alist)))
       (erase-buffer)
       (setq header-line-format (buffer-name side-hustle--source-buffer))
+      (setq tab-width side-hustle-indent-width)
       (when imenu-items (side-hustle-insert-items imenu-items 0))
       (goto-char x))))
 
