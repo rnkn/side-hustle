@@ -73,6 +73,12 @@ This requires either calling `quit-window' or
   :safe 'booleanp
   :group 'side-hustle)
 
+(defcustom side-hustle-item-char ?\*
+  "Character to use to itemize `imenu' items."
+  :type 'character
+  :safe 'characterp
+  :group 'side-hustle)
+
 (defcustom side-hustle-indent-char ?\t
   "Character to use to indent levels of `imenu' items."
   :type 'character
@@ -127,7 +133,7 @@ This requires either calling `quit-window' or
   "Insert ITEM at indentation level LEVEL.
 And `imenu' marker as text property."
   (insert (make-string level side-hustle-indent-char))
-  ;; (insert side-hustle-item-char "\s")
+  (insert side-hustle-item-char "\s")
   (insert-text-button (car item)
                       'hustle-marker (cdr item)
                       'hustle-level level
