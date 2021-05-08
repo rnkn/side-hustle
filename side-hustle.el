@@ -132,8 +132,9 @@ This requires either calling `quit-window' or
 ;;; Internal Functions
 
 (defun side-hustle-button-ensure ()
-  "Ensure point is on button."
+  "Ensure point is at button."
   (or (button-at (point))
+      (and (eolp) (forward-button -1 nil nil t))
       (forward-button 1 nil nil t)))
 
 (defun side-hustle-pop-to-marker (marker buffer save-window)
