@@ -6,6 +6,8 @@ Hustle through a buffer's Imenu in a side window in GNU Emacs.
 Side Hustle works on multiple buffers simultaneously, does not require a
 global minor mode, and does not rely on timers.
 
+See <https://www.gnu.org/software/emacs/manual/html_node/emacs/Imenu.html>.
+
 
 Installation
 ------------

@@ -1,4 +1,4 @@
-;;; side-hustle.el --- Navigate Imenu in a side window  -*- lexical-binding: t; -*-
+;;; side-hustle.el --- Hustle through Imenu in a side window  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2021  Paul W. Rankin
 
