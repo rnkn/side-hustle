@@ -185,7 +185,7 @@ And `imenu' marker as button property."
                       'hustle-level level
                       'face 'side-hustle
                       'action #'side-hustle-button-action
-                      'help-echo "mouse-1, RET: Go to this item; SPC: Show this item"
+                      'help-echo "mouse-1, RET: go to this item; SPC: show this item"
                       'follow-link t)
   (insert ?\n))
 
@@ -204,7 +204,7 @@ recursively with `cdr'."
    imenu-items))
 
 (defun side-hustle-refresh ()
-  "Rebuild `imenu' entries for source buffer and insert entries."
+  "Rebuild and insert `imenu' entries for source buffer."
   (interactive)
   (with-silent-modifications
     (let ((x (point))
@@ -324,7 +324,10 @@ Added to `window-configuration-change-hook'."
 
 (define-derived-mode side-hustle-mode
   special-mode "Side-Hustle"
-  "Major mode to navigate `imenu' via a side window."
+  "Major mode to navigate `imenu' via a side window.
+
+You should not activate this mode directly, rather, call
+`side-hustle-toggle' \\[side-hustle-toggle] in a source buffer."
   (add-to-invisibility-spec '(hustle-invisible . t)))
 
 
