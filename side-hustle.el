@@ -137,17 +137,20 @@ This requires either calling `quit-window' or
       (and (eolp) (forward-button -1 nil nil t))
       (forward-button 1 nil nil t)))
 
-(defun side-hustle-pop-to-marker (marker buffer save-window)
-  "Pop up buffer containing MARKER.
-Handle BUFFER according to SAVE-WINDOW or value of
+(defun side-hustle-pop-to-marker (button save-window)
+  "Pop up buffer containing `imenu' item for BUTTON.
+Handle buffer according to SAVE-WINDOW or value of
 `side-hustle-evaporate-window'."
-  (pop-to-buffer (marker-buffer marker))
-  (goto-char (marker-position marker))
-  (cond (save-window
-         (recenter 0)
-         (select-window (get-buffer-window buffer (selected-frame))))
-        (side-hustle-evaporate-window
-         (quit-window nil (get-buffer-window buffer (selected-frame))))))
+  (let ((buffer (current-buffer))
+        (marker (button-get button 'hustle-marker)))
+    (when (markerp marker)
+      (pop-to-buffer (marker-buffer marker))
+      (goto-char (marker-position marker))
+      (recenter-top-bottom)
+      (cond (save-window
+             (select-window (get-buffer-window buffer (selected-frame))))
+            (side-hustle-evaporate-window
+             (quit-window nil (get-buffer-window buffer (selected-frame))))))))
 
 (defun side-hustle-show-hide (start end)
   "Toggle invisibility of items between START and END."
@@ -168,10 +171,7 @@ Pass SAVE-WINDOW to `side-hustle-pop-to-marker'."
                   (< level (button-get (button-at (point)) 'hustle-level)))
         (setq end (button-end (button-at (point))))))
     (if (= start end)
-        (let ((buffer (current-buffer))
-              (marker (button-get button 'hustle-marker)))
-            (when (markerp marker)
-              (side-hustle-pop-to-marker marker buffer save-window)))
+        (side-hustle-pop-to-marker button save-window)
       (side-hustle-show-hide start end))))
 
 (defun side-hustle-insert (item level)
