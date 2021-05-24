@@ -6,7 +6,7 @@
 ;; Keywords: convenience
 ;; Version: 0.2.0
 ;; Package-Requires: ((emacs "24.4") (seq "2.20"))
-;; URL: https://git.bydasein.com/side-hustle
+;; URL: https://github.com/rnkn/side-hustle
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
