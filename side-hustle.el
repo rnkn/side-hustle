@@ -71,6 +71,7 @@
 ;;; Internal Variables ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defvar-local side-hustle--source-buffer nil)
+(defvar-local side-hustle--hidden nil)
 
 
 ;;; User Options ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -152,6 +153,13 @@ Handle buffer according to SAVE-WINDOW or value of
             (side-hustle-evaporate-window
              (quit-window nil (get-buffer-window buffer (selected-frame))))))))
 
+(defun side-hustle-switch-hide-state (label)
+  "Toggle inclusion of LABEL in `side-hustle--hidden'."
+  (setq side-hustle--hidden
+        (if (member label side-hustle--hidden)
+            (remove label side-hustle--hidden)
+          (cons label side-hustle--hidden))))
+
 (defun side-hustle-show-hide (start end)
   "Toggle invisibility of items between START and END."
   (with-silent-modifications
@@ -160,19 +168,25 @@ Handle buffer according to SAVE-WINDOW or value of
         (put-text-property start end 'invisible nil)
       (put-text-property start end 'invisible 'hustle-invisible))))
 
-(defun side-hustle-button-action (button &optional save-window)
+(defun side-hustle-button-action (button &optional hide save-window)
   "Call appropriate button action for BUTTON.
-Pass SAVE-WINDOW to `side-hustle-pop-to-marker'."
+When HIDE is non-nil, always hide child items. Pass SAVE-WINDOW
+to `side-hustle-pop-to-marker'."
   (let ((level (button-get button 'hustle-level))
+        (label (button-label button))
         (start (button-end button))
         (end   (button-end button)))
     (save-excursion
       (while (and (forward-button 1 nil nil t)
                   (< level (button-get (button-at (point)) 'hustle-level)))
         (setq end (button-end (button-at (point))))))
-    (if (= start end)
-        (side-hustle-pop-to-marker button save-window)
-      (side-hustle-show-hide start end))))
+    (cond ((= start end)
+           (side-hustle-pop-to-marker button save-window))
+          (hide
+           (side-hustle-show-hide start end))
+          (t
+           (side-hustle-show-hide start end)
+           (side-hustle-switch-hide-state label)))))
 
 (defun side-hustle-insert (item level)
   "Insert ITEM at indentation level LEVEL.
@@ -219,6 +233,11 @@ recursively with `cdr'."
       (setq header-line-format (buffer-name side-hustle--source-buffer))
       (setq tab-width side-hustle-indent-width)
       (when imenu-items (side-hustle-insert-items imenu-items 0))
+      (goto-char (point-min))
+      (let (button)
+        (while (setq button (forward-button 1 nil nil t))
+          (when (member (button-label button) side-hustle--hidden)
+            (side-hustle-button-action button t))))
       (goto-char x))))
 
 (defun side-hustle-find-existing (sourcebuf)
@@ -236,7 +255,8 @@ recursively with `cdr'."
                       (concat "Side-Hustle: " (buffer-name sourcebuf)))))
         (with-current-buffer new-buf
           (side-hustle-mode)
-          (setq side-hustle--source-buffer sourcebuf))
+          (setq side-hustle--source-buffer sourcebuf)
+          (setq side-hustle--hidden nil))
         new-buf)))
 
 (defun side-hustle-highlight-current ()
@@ -282,7 +302,7 @@ Added to `window-configuration-change-hook'."
   "Display the `imenu' item at point in other window."
   (interactive)
   (when (side-hustle-button-ensure)
-    (side-hustle-button-action (button-at (point)) t)))
+    (side-hustle-button-action (button-at (point)) nil t)))
 
 ;;;###autoload
 (defun side-hustle-toggle ()
