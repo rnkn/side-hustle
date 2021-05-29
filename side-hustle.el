@@ -68,12 +68,12 @@
   :link '(info-link "(emacs) Imenu"))
 
 
-;;; Internal Variables
+;;; Internal Variables ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defvar-local side-hustle--source-buffer nil)
 
 
-;;; User Options
+;;; User Options ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defcustom side-hustle-display-alist
   '((side . left)
@@ -116,7 +116,7 @@ This requires either calling `quit-window' or
   :group 'side-hustle)
 
 
-;;; Faces
+;;; Faces ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defface side-hustle
   '((t (:underline nil :inherit button)))
@@ -129,7 +129,7 @@ This requires either calling `quit-window' or
   :group 'side-hustle)
 
 
-;;; Internal Functions
+;;; Internal Functions ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun side-hustle-button-ensure ()
   "Ensure point is at button."
@@ -270,7 +270,7 @@ Added to `window-configuration-change-hook'."
                                  'face 'side-hustle-highlight))))))))
 
 
-;;; Commands
+;;; Commands ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun side-hustle-goto-item ()
   "Go to the `imenu' item at point in other window."
@@ -307,7 +307,7 @@ Added to `window-configuration-change-hook'."
 (defalias 'toggle-side-hustle 'side-hustle-toggle)
 
 
-;;; Mode Definition
+;;; Mode Definition ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defvar side-hustle-mode-map
   (let ((map (make-sparse-keymap)))
