@@ -324,7 +324,7 @@ Added to `window-configuration-change-hook'."
         (when side-hustle-select-window
           (select-window (get-buffer-window buf (selected-frame))))))))
 
-(defalias 'toggle-side-hustle 'side-hustle-toggle)
+(defalias 'toggle-side-hustle #'side-hustle-toggle)
 
 
 ;;; Mode Definition ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
