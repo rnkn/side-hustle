@@ -261,7 +261,6 @@ recursively with `cdr'."
 
 (defun side-hustle-highlight-current ()
   "Highlight the current `imenu' item in `side-hustle'.
-
 Added to `window-configuration-change-hook'."
   (unless (or (minibuffer-window-active-p (selected-window))
               (eq major-mode 'side-hustle-mode))
@@ -324,7 +323,7 @@ Added to `window-configuration-change-hook'."
         (when side-hustle-select-window
           (select-window (get-buffer-window buf (selected-frame))))))))
 
-(defalias 'toggle-side-hustle #'side-hustle-toggle)
+;; (defalias 'toggle-side-hustle #'side-hustle-toggle)
 
 
 ;;; Mode Definition ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
