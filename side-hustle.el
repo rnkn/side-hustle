@@ -259,34 +259,34 @@ recursively with `cdr'."
           (setq side-hustle--hidden nil))
         new-buf)))
 
-(defun side-hustle-highlight-current ()
-  "Highlight the current `imenu' item in `side-hustle'.
-Added to `window-configuration-change-hook'."
-  (unless (or (minibuffer-window-active-p (selected-window))
-              (eq major-mode 'side-hustle-mode))
-    (let ((x (point))
-          (buf (side-hustle-find-existing (current-buffer)))
-          candidate diff)
-      (when (and buf (window-live-p (get-buffer-window buf)))
-        (with-current-buffer buf
-          (with-silent-modifications
-            (remove-text-properties (point-min) (point-max) '(face))
-            (goto-char (point-min))
-            (while (< (point) (point-max))
-              (let ((marker (get-text-property (point) 'side-hustle-imenu-marker)))
-                (when (and (markerp marker)
-                           (<= (marker-position marker) x)
-                           (or (null diff) (< (- x (marker-position marker)) diff)))
-                  (setq candidate (point)
-                        diff (if diff
-                                 (min diff (- x (marker-position marker)))
-                               (- x (marker-position marker))))))
-              (forward-line 1))
-            (when candidate
-              (goto-char candidate)
-              (put-text-property (line-beginning-position 1)
-                                 (line-beginning-position 2)
-                                 'face 'side-hustle-highlight))))))))
+;; (defun side-hustle-highlight-current ()
+;;   "Highlight the current `imenu' item in `side-hustle'.
+;; Added to `window-configuration-change-hook'."
+;;   (unless (or (minibuffer-window-active-p (selected-window))
+;;               (eq major-mode 'side-hustle-mode))
+;;     (let ((x (point))
+;;           (buf (side-hustle-find-existing (current-buffer)))
+;;           candidate diff)
+;;       (when (and buf (window-live-p (get-buffer-window buf)))
+;;         (with-current-buffer buf
+;;           (with-silent-modifications
+;;             (remove-text-properties (point-min) (point-max) '(face))
+;;             (goto-char (point-min))
+;;             (while (< (point) (point-max))
+;;               (let ((marker (get-text-property (point) 'side-hustle-imenu-marker)))
+;;                 (when (and (markerp marker)
+;;                            (<= (marker-position marker) x)
+;;                            (or (null diff) (< (- x (marker-position marker)) diff)))
+;;                   (setq candidate (point)
+;;                         diff (if diff
+;;                                  (min diff (- x (marker-position marker)))
+;;                                (- x (marker-position marker))))))
+;;               (forward-line 1))
+;;             (when candidate
+;;               (goto-char candidate)
+;;               (put-text-property (line-beginning-position 1)
+;;                                  (line-beginning-position 2)
+;;                                  'face 'side-hustle-highlight))))))))
 
 
 ;;; Commands ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
