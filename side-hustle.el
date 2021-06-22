@@ -124,10 +124,10 @@ This requires either calling `quit-window' or
   "Default face for side-window items."
   :group 'side-hustle)
 
-(defface side-hustle-highlight
-  '((t (:extend t :inherit (secondary-selection))))
-  "Default face for highlighted items."
-  :group 'side-hustle)
+;; (defface side-hustle-highlight
+;;   '((t (:extend t :inherit (secondary-selection))))
+;;   "Default face for highlighted items."
+;;   :group 'side-hustle)
 
 
 ;;; Internal Functions ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
