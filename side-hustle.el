@@ -1,8 +1,8 @@
 ;;; side-hustle.el --- Hustle through Imenu in a side window  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2021  Paul W. Rankin
+;; Copyright (c) 2021-2023  Paul W. Rankin
 
-;; Author: Paul W. Rankin <pwr@bydasein.com>
+;; Author: Paul W. Rankin <hello@paulwrankin.com>
 ;; Keywords: convenience
 ;; Version: 0.2.0
 ;; Package-Requires: ((emacs "24.4") (seq "2.20"))
