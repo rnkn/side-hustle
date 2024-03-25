@@ -4,7 +4,7 @@
 
 ;; Author: Paul W. Rankin <hello@paulwrankin.com>
 ;; Keywords: convenience
-;; Version: 0.2.0
+;; Version: 0.3.0
 ;; Package-Requires: ((emacs "24.4") (seq "2.20"))
 ;; URL: https://github.com/rnkn/side-hustle
 
@@ -158,15 +158,15 @@ This requires either calling `quit-window' or
       (and (eolp) (forward-button -1 nil nil t))
       (forward-button 1 nil nil t)))
 
-(defun side-hustle-pop-to-marker (button save-window)
+(defun side-hustle-imenu-item (button save-window)
   "Pop up buffer containing `imenu' item for BUTTON.
 Handle buffer according to SAVE-WINDOW or value of
 `side-hustle-evaporate-window'."
   (let ((buffer (current-buffer))
-        (marker (button-get button 'hustle-marker)))
-    (when (markerp marker)
-      (pop-to-buffer (marker-buffer marker))
-      (goto-char (marker-position marker))
+        (imenu-item (button-get button 'hustle-item)))
+    (when imenu-item
+      (pop-to-buffer side-hustle--source-buffer)
+      (imenu imenu-item)
       (recenter-top-bottom)
       (cond (save-window
              (select-window (get-buffer-window buffer (selected-frame))))
@@ -191,7 +191,7 @@ Handle buffer according to SAVE-WINDOW or value of
 (defun side-hustle-button-action (button &optional hide save-window)
   "Call appropriate button action for BUTTON.
 When HIDE is non-nil, always hide child items. Pass SAVE-WINDOW
-to `side-hustle-pop-to-marker'."
+to `side-hustle-imenu-item'."
   (let ((level (button-get button 'hustle-level))
         (label (button-label button))
         (start (button-end button))
@@ -201,7 +201,7 @@ to `side-hustle-pop-to-marker'."
                   (< level (button-get (button-at (point)) 'hustle-level)))
         (setq end (button-end (button-at (point))))))
     (cond ((= start end)
-           (side-hustle-pop-to-marker button save-window))
+           (side-hustle-imenu-item button save-window))
           (hide
            (side-hustle-show-hide start end))
           (t
@@ -215,7 +215,7 @@ And `imenu' marker as button property."
   (when (characterp side-hustle-item-char)
     (insert side-hustle-item-char "\s"))
   (insert-text-button (car item)
-                      'hustle-marker (cdr item)
+                      'hustle-item item
                       'hustle-level level
                       'face 'side-hustle
                       'action #'side-hustle-button-action
