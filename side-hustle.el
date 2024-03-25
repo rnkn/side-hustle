@@ -1,6 +1,6 @@
 ;;; side-hustle.el --- Hustle through Imenu in a side window  -*- lexical-binding: t; -*-
 
-;; Copyright (c) 2021-2023  Paul W. Rankin
+;; Copyright (c) 2021-2024  Paul W. Rankin
 
 ;; Author: Paul W. Rankin <hello@paulwrankin.com>
 ;; Keywords: convenience
